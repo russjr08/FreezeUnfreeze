@@ -1,4 +1,4 @@
-debug: true
+debug: false
 frozenMessage: You may not move at this moment!
 invalidBlockMessage: You may not tamper with blocks at this moment!
 invalidCommandMessage: You may not enter commands at this moment!
