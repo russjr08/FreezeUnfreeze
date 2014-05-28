@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -19,6 +20,7 @@ public class PlayerListener implements Listener {
         FreezeUnfreeze.debug("Player Listener constructed...");
     }
 
+    // Probably don't need HIGHEST, but as doing it as a cautionary thing.
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerMove(PlayerMoveEvent event){
         if(FreezeUnfreeze.frozenPlayers.contains(event.getPlayer().getName())){
@@ -28,20 +30,24 @@ public class PlayerListener implements Listener {
             double toX = event.getTo().getX();
             double toY = event.getTo().getY();
             double toZ = event.getTo().getZ();
+            boolean invalidMove = false;
             if (fromX != toX) {
                 Location l = new Location(event.getFrom().getWorld(), fromX, fromY, fromZ);
                 event.setTo(l);
-
+                invalidMove = true;
             }
             if (fromY != toY) {
                 Location l = new Location(event.getFrom().getWorld(), fromX, fromY, fromZ);
                 event.setTo(l);
-
+                invalidMove = true;
             }
             if (fromZ != toZ) {
                 Location l = new Location(event.getFrom().getWorld(), fromX, fromY, fromZ);
                 event.setTo(l);
-
+                invalidMove = true;
+            }
+            if (invalidMove) {
+                event.getPlayer().sendMessage(FreezeUnfreeze.frozenMessage);
             }
         }
     }
@@ -51,6 +57,7 @@ public class PlayerListener implements Listener {
         if(FreezeUnfreeze.frozenPlayers.contains(event.getPlayer().getName())){
             FreezeUnfreeze.debug(event.getPlayer().getName() + " tried to run: " + event.getMessage());
             event.setCancelled(true);
+            event.getPlayer().sendMessage(FreezeUnfreeze.invalidCommandMessage);
         }
     }
 
@@ -59,7 +66,17 @@ public class PlayerListener implements Listener {
         if(event.hasBlock()){
             if(FreezeUnfreeze.frozenPlayers.contains(event.getPlayer().getName())){
                 event.setCancelled(true);
+                event.getPlayer().sendMessage(FreezeUnfreeze.invalidBlockMessage);
+
             }
+        }
+    }
+
+    @EventHandler
+    public void chatEvent(AsyncPlayerChatEvent event) {
+        if (FreezeUnfreeze.frozenPlayers.contains(event.getPlayer().getName())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(FreezeUnfreeze.invalidChatMessage);
         }
     }
 

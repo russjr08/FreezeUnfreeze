@@ -1,1 +1,5 @@
 debug: true
+frozenMessage: You may not move at this moment!
+invalidBlockMessage: You may not tamper with blocks at this moment!
+invalidCommandMessage: You may not enter commands at this moment!
+invalidChatMessage: You may not communicate with others at this moment!

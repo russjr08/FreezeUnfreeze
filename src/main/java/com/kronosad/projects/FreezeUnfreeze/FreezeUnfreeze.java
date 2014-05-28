@@ -26,6 +26,8 @@ public class FreezeUnfreeze extends JavaPlugin {
     protected FreezeUnfreezeConfiguration config;
     protected File dataFolder;
 
+    public static String frozenMessage, invalidBlockMessage, invalidCommandMessage, invalidChatMessage;
+
     public static List<String> frozenPlayers = new ArrayList<String>();
 
     public void onEnable() {
@@ -39,6 +41,12 @@ public class FreezeUnfreeze extends JavaPlugin {
         Configuration configuration = this.getConfig();
         configuration.options().copyDefaults(true);
         debugMode = configuration.getBoolean("debug");
+
+        frozenMessage = configuration.getString("frozenMessage");
+        invalidBlockMessage = configuration.getString("invalidBlockMessage");
+        invalidCommandMessage = configuration.getString("invalidCommandMessage");
+        invalidChatMessage = configuration.getString("invalidChatMessage");
+
         this.config = new FreezeUnfreezeConfiguration(configuration);
 
         frozenPlayers = config.getSerializedPlayers();
