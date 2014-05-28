@@ -12,6 +12,7 @@ commands:
       permission: player.unsuspend
 database: false
 author: "russjr08"
+depend: [Vault]
 authors:
   - "russjr08"
 load: postworld

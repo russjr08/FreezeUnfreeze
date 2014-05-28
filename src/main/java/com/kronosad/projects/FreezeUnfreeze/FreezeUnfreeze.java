@@ -1,6 +1,7 @@
 package com.kronosad.projects.FreezeUnfreeze;
 
 import com.kronosad.projects.FreezeUnfreeze.handler.PlayerListener;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -9,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,6 +27,8 @@ public class FreezeUnfreeze extends JavaPlugin {
     protected PluginManager pm;
     protected FreezeUnfreezeConfiguration config;
     protected File dataFolder;
+
+    private Permission permission;
 
     public static String frozenMessage, invalidBlockMessage, invalidCommandMessage, invalidChatMessage;
 
@@ -56,6 +60,19 @@ public class FreezeUnfreeze extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         log("Version " + this.getDescription().getVersion() + " enabled");
+
+        if (!setupPermissions()) {
+            error("Was unable to setup Vault Permissions integration!");
+        }
+    }
+
+    // Snippet from the Vault plugin page.
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
     }
 
     public void onDisable() {
@@ -87,7 +104,7 @@ public class FreezeUnfreeze extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("suspend")) {
             if (sender instanceof Player) {
-                if (!sender.hasPermission("player.suspend") || sender.isOp()) {
+                if (!permission.has(sender, "player.suspend")) {
                     sender.sendMessage(ChatColor.DARK_RED + "Invalid permissions!");
                     debug(((Player) sender).getDisplayName() + " tried to use the SUSPEND command, but didn't pass permissions validation!");
                     return false;
@@ -105,7 +122,7 @@ public class FreezeUnfreeze extends JavaPlugin {
             }
         } else if (label.equalsIgnoreCase("unsuspend")) {
             if (sender instanceof Player) {
-                if (!sender.hasPermission("player.unsuspend") || sender.isOp()) {
+                if (!permission.has(sender, "player.unsuspend")) {
                     sender.sendMessage(ChatColor.DARK_RED + "Invalid permissions!");
                     debug(((Player) sender).getDisplayName() + " tried to use the UNSUSPEND command, but didn't pass permissions validation!");
                     return false;
