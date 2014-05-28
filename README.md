@@ -5,7 +5,7 @@ Description:
 ------------
 A plugin that will stop players right in their tracks!
 
-Requested (here)[http://forums.bukkit.org/threads/request-greif-stop.273080/]
+Requested [here](http://forums.bukkit.org/threads/request-greif-stop.273080/).
 
 Permissions:
 ------------
