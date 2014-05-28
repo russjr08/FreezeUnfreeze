@@ -1,0 +1,17 @@
+name: FreezeUnfreeze
+version: "${project.version}"
+main: com.kronosad.projects.FreezeUnfreeze.FreezeUnfreeze
+commands:
+   suspend:
+      description: Suspends players from interacting with the server.
+      usage: /command [Player]
+      permission: player.suspend
+   unsuspend:
+      description: Unsuspends players from interacting with the server.
+      usage: /command [Player]
+      permission: player.unsuspend
+database: false
+author: "russjr08"
+authors:
+  - "russjr08"
+load: postworld
